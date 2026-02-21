@@ -105,6 +105,13 @@ func (s *Scheduler) pushToNightscout() {
 		return
 	}
 
+	if len(*data) == 0 {
+		log.Println("No glucose records returned from Sibionics API")
+	} else {
+		latest := (*data)[len(*data)-1]
+		log.Printf("Fetched %d glucose records from Sibionics API (latest: %s -> %.1f mg/dL)", len(*data), latest.Timestamp, latest.Value)
+	}
+
 	err = s.nightscoutUseCase.PushData(*data)
 	if err != nil {
 		log.Printf("Error pushing data to Nightscout: %v", err)
