@@ -55,9 +55,9 @@ func (s *Scheduler) scheduleNextPush() {
 			var nextPushTime time.Time
 
 			if lastRecord == nil {
-				// No records found, push immediately
-				log.Println("No records found in Nightscout, pushing immediately")
-				s.pushToNightscout()
+				// If Nightscout reports no records, avoid an immediate second push.
+				// Pushes already happen on startup and after each wait interval.
+				log.Println("No records found in Nightscout, scheduling next push in 5 minutes")
 				nextPushTime = time.Now().Add(5 * time.Minute)
 			} else {
 				// Calculate time based on last record
